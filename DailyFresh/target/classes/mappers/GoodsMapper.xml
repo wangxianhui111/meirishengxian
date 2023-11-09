@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.neusoft.fresh.dao.GoodsDao" >
+
+  <resultMap id="BaseResultMap"  type="com.neusoft.fresh.model.Goods">
+     <id column="id" property="id"  jdbcType="INTEGER"/>
+     <result column="goodsname"  property="goodsname"  jdbcType="VARCHAR"/>
+     <result column="price"  property="price"  jdbcType="DECIMAL"/>
+     <result column="supplierid"  property="supplierid"  jdbcType="INTEGER"/>
+     <result column="sortid"  property="sortid"  jdbcType="INTEGER"/>
+     <result column="details"  property="details"  jdbcType="VARCHAR"/>
+     <result column="pub_time"  property="pub_time"  jdbcType="VARCHAR"/>
+     <result column="status"  property="status"  jdbcType="VARCHAR"/>
+     <result column="pic_url"  property="pic_url"  jdbcType="VARCHAR"/>
+     <result column="inventory"  property="inventory"  jdbcType="INTEGER"/>
+  </resultMap>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select * from goods
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectBySupplier" parameterType="java.util.Map"  resultMap="BaseResultMap">
+       select *from goods  where supplierid=#{supplierid}
+       <if test="start!=null and size!=null">
+       limit #{start},#{size}
+       </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from meirixian.goods
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+    <select id="countByType" resultType="java.lang.Integer">
+       select count(*) from goods where sortid=#{typeId}
+  </select>
+  
+  <select id="selectByType" parameterType="java.util.Map" resultMap="BaseResultMap">
+       select * from goods where sortid in (select id from goods_sorts where type=#{typeid}) 
+       <if test="start!=null and size!=null">
+       limit #{start},#{size}
+       </if>
+  </select>
+  
+  <insert id="insert" parameterType="com.neusoft.fresh.model.Goods" >
+    insert into goods(
+    goodsname,
+    price,
+    supplierid,
+    sortid,
+    details,
+    pub_time,
+    status,
+    pic_url,
+    inventory
+    )
+    values (#{goodsname,jdbcType=VARCHAR} 
+    	    ,#{price,jdbcType=DECIMAL} 
+    	    ,#{supplierid,jdbcType=INTEGER} 
+    	    ,#{sortid,jdbcType=INTEGER} 
+    	    ,#{details,jdbcType=VARCHAR} 
+    	    ,#{pub_time,jdbcType=VARCHAR} 
+    	    ,#{status,jdbcType=VARCHAR} 
+    	    ,#{pic_url,jdbcType=VARCHAR} 
+    	    ,#{inventory,jdbcType=INTEGER} 
+    	    )
+  </insert>
+  
+  
+  <update id="updateByPrimaryKey" parameterType="com.neusoft.fresh.model.Goods">
+    update goods
+      <set>
+        
+        
+        <if test="goodsname != null" >
+        goodsname = #{goodsname,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="price != null" >
+        price = #{price,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="supplierid != null" >
+        supplierid = #{supplierid,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="sortid != null" >
+        sortid = #{sortid,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="details != null" >
+        details = #{details,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="pub_time != null" >
+        pub_time = #{pub_time,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="pic_url != null" >
+        pic_url = #{pic_url,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="inventory != null" >
+        inventory = #{inventory,jdbcType=VARCHAR},
+        </if>
+        
+      </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="select" parameterType="java.util.Map"  resultMap="BaseResultMap">
+       select *from goods  
+       <if test="start!=null and size!=null">
+       limit #{start},#{size}
+       </if>
+  </select>
+  
+
+  
+  <select id="count" parameterType="java.util.Map" resultType="int">
+       select count(*) from goods 
+  </select>
+</mapper>

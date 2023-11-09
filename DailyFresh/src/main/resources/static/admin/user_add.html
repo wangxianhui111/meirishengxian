@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>信息管理系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="scripts/jquery/jquery-1.7.1.js"></script>
+<link href="style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="style/authority/common_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="scripts/authority/commonAll.js"></script>
+<script type="text/javascript" src="scripts/jquery/jquery-1.4.4.min.js"></script>
+<script src="scripts/My97DatePicker/WdatePicker.js" type="text/javascript" defer="defer"></script>
+<script type="text/javascript" src="scripts/artDialog/artDialog.js?skin=default"></script>
+<script src="scripts/laydate/laydate.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		/*
+		 * 提交
+		 */
+		$("#submitbutton").click(function() {
+			if(validateForm()&&checkFyFh()){
+				checkFyFhSubmit();
+			}
+		});
+		
+		laydate.render({
+		  elem: '#birthday'
+		});
+		
+		/*
+		 * 取消
+		 */
+		$("#cancelbutton").click(function() {
+			/**  关闭弹出iframe  **/
+			window.parent.$.fancybox.close();
+		});
+		
+		var result = 'null';
+		if(result =='success'){
+			/**  关闭弹出iframe  **/
+			window.parent.$.fancybox.close();
+		}
+	});
+	
+	
+	/** 表单验证  **/
+	function validateForm(){
+		if($("#username").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写账号', ok:true,});
+			return false;
+		}
+		if($("#password").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写密码', ok:true,});
+			return false;
+		}
+		if($("#sex").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写性别', ok:true,});
+			return false;
+		}
+		if($("#birthday").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写生日', ok:true,});
+			return false;
+		}
+		if($("#address").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写地址', ok:true,});
+			return false;
+		}
+		return true;
+	}
+	
+	/** 检测账号是否存在  **/
+	function checkFyFh(){
+		var username = $('#username').val();
+		if(username!=""){
+			// 异步判断该房室是否存在，如果已存在，给用户已提示哦
+			$.ajax({
+				type:"GET",
+				url:"/user/check/"+username,
+				dataType : "json",
+				success:function(data){
+					if(data.res=="1"){
+						 $('#usernameTip').text('检测账号已存在');
+						 $('#usernameTip').css("color","red");
+						 /* append("<span></span>"); */
+						 /* art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'该账号名在系统中已经存在，\n请重新填写帐户名', ok:true,}); */
+						 $("#username").val("");
+						 return false;
+					}else{
+						$('#usernameTip').text('验证通过');
+						$('#usernameTip').css("color","green");
+					}
+				}
+			});
+		}
+		return true;
+	}
+	
+	function checkFyFhSubmit(){
+		var username = $('#username').val();
+		var password = $("#password").val();
+		var sex = $("#sex").val();
+		var birthday = $("#birthday").val();
+		var address = $("#address").val();
+		var money = $("#money").val();
+		var url="/user/insert";
+		if(username!="" && password!="" && sex!="" && birthday!="" && address!="" && money!=""){
+			var data = {"username":username,"password":password,"sex":sex,"birthday":birthday,"address":address,"money":money};
+			$.ajax({
+				type:"POST",
+				url:url,
+				data:JSON.stringify(data),
+				dataType: "json",//预期服务器返回的数据类型
+				contentType: "application/json; charset=utf-8",
+				success:function(result){
+					//alert(data);
+					console.log(result);//打印服务端返回的数据
+	                if (result.resultCode == 200) {
+	                	alert("保存成功");
+	                }else {
+	                	alert("操作失败");
+	                }
+				},
+	            error: function () {
+	                	alert("操作失败");
+	            }
+			});
+		}
+		window.location.href="user_list.html";
+	}
+</script>
+</head>
+<body>
+<form id="submitForm" name="submitForm" action="/xngzf/archives/initFangyuan.action" method="post">
+	<input type="hidden" name="fyID" value="14458625716623" id="fyID"/>
+	<div id="container">
+		<div class="ui_content">
+			<table  cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+				<tr>
+					<td style="width: 60px;" class="ui_text_rt">帐户 </td>
+					<td class="ui_text_lt">
+						<input type="text" id="username" name="username"  value="" class="ui_input_txt01" onblur="checkFyFh();"/>
+						<span id="usernameTip"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">密码 </td>
+					<td class="ui_text_lt">
+						<input type="password" id="password" name="password"  value="" class="ui_input_txt01"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">性别 </td>
+					<td class="ui_text_lt">
+						<select id="sex" name="sex" class="ui_select01">
+                            <option value="">
+                            <option value="1">男</option>
+                            <option value="0">女</option>
+                        </select>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">生日 </td>
+					<td class="ui_text_lt">
+						<input type="text" id="birthday" name="birthday"  value="" placeholder="yyyy-MM-dd" class="ui_input_txt01"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">地址</td>
+					<td class="ui_text_lt">
+						<input type="text" id="address" name="address"  value="" placeholder="江苏省/南京市/雨花台区/XXX街道XXX号" class="ui_input_txt01"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">资产余额 </td>
+					<td class="ui_text_lt">
+						<input type="text" id="money" name="money"  value="0" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="请输入数字" class="ui_input_txt01"/>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td class="ui_text_lt">
+						&nbsp;<input id="submitbutton" type="button" value="提交" class="ui_input_btn01"/>
+						&nbsp;<input id="cancelbutton" type="button" value="取消" class="ui_input_btn01"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</form>
+
+</body>
+</html>

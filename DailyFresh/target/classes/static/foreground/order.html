@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>订单中心</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="keywords" content="" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- bootstrap-css -->
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<!--// bootstrap-css -->
+<!-- css -->
+<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+<!--// css -->
+<!-- font-awesome icons -->
+<link href="css/font-awesome.css" rel="stylesheet"> 
+<!-- //font-awesome icons -->
+<!-- font -->
+<!--<link href="http://fonts.googleapis.com/css?family=Playball&amp;subset=latin-ext" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300' rel='stylesheet' type='text/css'>-->
+<!-- //font -->
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$(".scroll").click(function(event){		
+			event.preventDefault();
+			$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+		});
+	});
+</script> 
+<!--[if lt IE 9]>
+  <script src="js/html5shiv.js"></script>
+<![endif]-->
+</head>
+<body>
+	<!-- banner -->
+	<div class="banner about-banner">
+		<div class="header">
+			<div class="container">
+				<div class="header-left">
+					<div class="w3layouts-logo">
+						<h1>
+							<a href="index.html">每日鲜 <span><sup>Life</sup></span></a>
+						</h1>
+					</div>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+		<div class="header-bottom">
+			<div class="container">
+				<div class="top-nav">
+					<nav class="navbar navbar-default">
+							<div class="navbar-header">
+								<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+									<span class="sr-only">Toggle navigation</span>
+									<span class="icon-bar"></span>
+									<span class="icon-bar"></span>
+									<span class="icon-bar"></span>
+								</button>
+							</div>
+						<!-- Collect the nav links, forms, and other content for toggling -->
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+							<ul class="nav navbar-nav">
+								<li><a class="active list-border" href="index.html">主页</a></li>
+								<li><a href="goodsList.html">生鲜列表</a></li>
+								<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">分类<span class="caret"></span></a>
+									<ul class="dropdown-menu">
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=1">水果</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=2">肉类</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=3">蔬菜</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=4">水产</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=5">乳品</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=6">酒饮</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=7">熟食</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=8">轻食</a></li>
+									</ul>
+								</li>								
+								<li><a href="cart.html">购物车</a></li>
+								<li><a class="list-border1" href="userInfo.html">个人中心</a></li>
+								<li><a class="list-border1" href="order.html">订单配送</a></li>
+							</ul>
+							<div class="clearfix"> </div>
+						</div>	
+					</nav>	
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- //banner -->
+	<div class="about-heading">	
+		<div class="container">
+			<h2>订单配送</h2>
+		</div>
+	</div>
+	<!-- contact -->
+	<div class="contact">
+		<div class="container">
+			<p class="wow fadeInUp animated" data-wow-delay=".5s">Add borders and rounded corners to the table.</p>
+				<div class="bs-docs-example wow fadeInUp animated" data-wow-delay=".5s">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>订单号</th>
+								<th>购买生鲜名</th>
+								<th>预览</th>
+								<th>供应商名称</th>
+								<th>数量</th>
+								<th>总价</th>
+								<th style="width: 20%">配送</th>
+							</tr>
+						</thead>
+						<tbody id="orderList">
+						</tbody>
+					</table>
+				</div>			
+		</div>
+	</div>
+	<!-- //contact -->
+	<div class="blog" style="margin:0px;padding: 0px;margin-bottom: 20px;">
+		<div class="container">
+			<div class="agile-blog-grids">
+				<div class="col-md-8 agile-blog-grid-left"  style="width: 100%;float: left;">
+					<p style="clear:both"></p>
+					<nav>
+						<ul class="pagination"  style="margin:0px;padding: 0px;float: right;">
+							<input type="hidden" id="counts" />
+							<li>
+								<a onclick="upPage()" aria-label="Previous">
+									<span  aria-hidden="true">«</span>
+								</a>
+							</li>
+							<li><a href="#" id="pages">1</a></li>
+							<li><a href="#" > / </a></li> 
+							<li><a href="#" id="pageCounts">1</a></li>
+							<li>
+								<a onclick="nextPage()" aria-label="Next">
+									<span  aria-hidden="true">»</span>
+								</a> 
+							</li>
+						</ul>
+					</nav>
+				</div>
+				<div class="clearfix"> </div> 
+			</div>
+		</div>
+	</div>
+	
+	<script src="js/SmoothScroll.min.js"></script>
+	<script type="text/javascript" src="js/move-top.js"></script>
+	<script type="text/javascript" src="js/easing.js"></script>
+	<script src="js/check.js"></script>
+	<!-- here stars scrolling icon -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+								
+			$().UItoTop({ easingType: 'easeOutQuart' });
+			if (getCookie("mrxuserId") == null) {
+		        alert("检测到账户未登录!");
+		        window.location.href = "login.html";
+		    }else{
+		    	var id=getCookie("mrxuserId");
+		    	getOrders("");
+		    	getCounts();
+		    }
+		});
+		
+		function getOrders(url){
+			var id="";
+			if (getCookie("mrxuserId") == null) {
+		        alert("检测到账户未登录!");
+		        window.location.href = "login.html";
+		    }else{
+		    	id=getCookie("mrxuserId");
+		    }
+			if(url==""||null==url){
+				url="/order/getByUser?page=1&rows=5&id="+id;
+			}else{
+				url=url+"&id="+id;
+			}
+			$.ajax({
+				type:"post",
+				url:url,
+				async:false,
+				success:function(result){
+					var id="";
+					var name="";
+					var nums="";
+					var name2="";
+					var totalPrice="";
+					var goodsPic="";
+					var status="";
+					var tips="";
+					for(var i=0;i<result.length;i++){
+						id=result[i].id;
+						name=getGoodsName(result[i].goodsid);
+						name2=getSupplierName(result[i].supplierid);
+						goodsPic=getGoodsPic(result[i].goodsid);
+						nums=result[i].num*1;
+						totalPrice=result[i].totalPrice*1;
+						status=result[i].status;
+						var html;
+						if(status=="0"){
+							tips="等待供应商发货";
+						}
+						if(status=="2"){
+							tips="订单结束";
+						}
+						if(status=="0"||status=="2"){
+							html=`<tr>
+								<td>${id}</td>
+								<td>${name}</td>
+								<td><img width="60" height="50" src=${goodsPic}>
+								<td>${name2}</td>
+								<td>${nums}</td>
+								<td>${totalPrice}</td>
+								<td>
+									<span>${tips}</span>
+								</td>
+							</tr>`;
+							
+						}
+						if(status=="1"){
+							tips="正在配送中 ";
+							 html=`<tr>
+									<td>${id}</td>
+									<td>${name}</td>
+									<td><img width="60" height="50" src=${goodsPic}>
+									<td>${name2}</td>
+									<td>${nums}</td>
+									<td>${totalPrice}</td>
+									<td>
+										<span>${tips}</span>
+										<a onclick="sure(${result[i].id})" style="padding: 8px;" class="label label-success">确认收货</a>
+									</td>
+								</tr>`;
+						}
+						
+						//alert(html);
+						$("#orderList").append(html);
+					}
+				}
+			});
+	  	 }
+		
+		function getGoodsPic(id){
+			var pic_url="";
+			$.ajax({
+	            type: "GET",
+	            dataType: "json",
+	            async:false,
+	            url: '/goods/info/' + id,
+	            success: function (data) {
+	                if (data != null) {
+	                	pic_url=data.data.pic_url;
+	                }else {
+	                    alert(" getGoodsPic data.data.pic_url 无数据!");
+	                }
+	            }
+	        });
+			return pic_url;
+		 }
+		
+		
+		function getCounts(){
+			var id="";
+			if (getCookie("mrxuserId") == null) {
+		        alert("检测到账户未登录!");
+		        window.location.href = "login.html";
+		    }else{
+		    	id=getCookie("mrxuserId");
+		    }
+			url="/order/countByUser?id="+id;
+			/*查询管理员信息*/
+			$.ajax({
+				type:"get",
+				url:url,
+				async:false,
+				success:function(result){
+					console.log("result"+result);
+					console.log("result.total"+result.total);
+					$("#counts").text(result.total);
+					$("#counts").val(result.total);
+					var size=5*1;
+					var counts=result.total*1;
+					var endPages=Math.ceil(counts/size);
+					$("#pageCounts").text(endPages);
+				}
+			});
+		}
+		
+		
+		
+		function upPage(){
+			$("#orderList").html("");
+			var pageNow=$("#pages").text();
+			var pageN= pageNow*1-1;
+			if(pageN>0){
+				$("#pages").text(pageN);
+				getOrders("/order/getByUser?page="+pageN+"&rows=5");
+			}else{
+				alert("当前是第一页");
+				getOrders("/order/getByUser?page="+pageNow+"&rows=5");
+				return;
+			}
+		}
+		
+		function nextPage(){
+			$("#orderList").html("");
+			var pageNow=$("#pages").text();
+			var pageN= pageNow*1+1;
+			var size=5*1;
+			var counts=$("#counts").text()*1;
+			var endPages=Math.ceil(counts/size);
+			if(pageN<=endPages){
+				$("#pages").text(pageN);
+				getOrders("/order/getByUser?page="+pageN+"&rows=5");
+			}else{
+				alert("当前已是最后一页");
+				getOrders("/order/getByUser?page="+pageNow+"&rows=5");
+				return;
+			}
+		}
+		
+		
+		/*收货*/
+	    function sure(id) {
+			$.ajax({
+                type: "GET",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: "/order/sure/" + id,//url
+                success: function (result) {
+                    console.log(result);//打印服务端返回的数据
+                    if (result.resultCode == 200) {
+                        alert("订单状态变更，已推送至前台");
+                    }else {
+                    	alert("删除失败");
+                    }
+                },
+                error: function () {
+                	//alert("ERROR！");
+                }
+            });
+			location.reload();
+		}
+		
+		function getGoodsName(id){
+			var name="";
+			$.ajax({
+	            type: "GET",
+	            dataType: "json",
+	            async:false,
+	            url: '/goods/info/' + id,
+	            success: function (data) {
+	                if (data != null) {
+	                	name=data.data.goodsname;
+	                }else {
+	                    alert(" getGoodsName data.data.goodsname 无数据!");
+	                }
+	            }
+	        });
+			return name;
+   	 	}
+
+		function getSupplierName(id){
+			var name="";
+			$.ajax({
+	            type: "GET",
+	            dataType: "json",
+	            async:false,
+	            url: '/supplier/info/' + id,
+	            success: function (data) {
+	                if (data != null) {
+	                	name=data.data.username;
+	                }else {
+	                    alert(" getSupplierName data.data.username 无数据!");
+	                }
+	            }
+	        });
+			return name;
+   	 	}
+	
+	</script>
+	<!-- //here ends scrolling icon -->
+</body>	
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="plugin/kindeditor/themes/default/default.css"/>
+<script type="text/javascript" src="scripts/jquery/jquery-1.7.1.js"></script>
+<link href="style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="style/authority/common_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="scripts/fancybox/jquery.fancybox-1.3.4.js"></script>
+<link rel="stylesheet" type="text/css" href="plugin/jquery-easyui-1.3.3/themes/icon.css">
+<script type="text/javascript" src="scripts/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="scripts/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="plugin/jquery-easyui-1.3.3/jquery.easyui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="plugin/jquery-easyui-1.3.3/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="style/authority/jquery.fancybox-1.3.4.css" media="screen"></link>
+<title>信息管理系统</title>
+<script src="js/check.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){ 
+		/** 新增   **/
+ 	    $("#addBtn").fancybox({
+	    	'href'  : 'supplier_edit.html',
+	    	'width' : 733,
+	        'height' : 530,
+	        'type' : 'iframe',
+	        'hideOnOverlayClick' : false,
+	        'showCloseButton' : false,
+	        'onClosed' : function() { 
+	        	window.location.href = 'supplier_edit.html';
+	        }
+	    });
+	    /**编辑   **/
+	   $("a.edit").fancybox({
+	    	'width' : 733,
+	        'height' : 530,
+	        'type' : 'iframe',
+	        'hideOnOverlayClick' : false,
+	        'showCloseButton' : false,
+	        'onClosed' : function() { 
+	        	window.location.href = 'supplier_list.html';
+	        }
+	    });
+	});
+</script>
+<style>
+	.alt td{ background:black !important;}
+</style>
+</head>
+<body>
+	<form id="submitForm" name="submitForm" action="" method="post">
+		<input type="hidden" name="allIDCheck" value="" id="allIDCheck"/>
+		<input type="hidden" name="fangyuanEntity.fyXqName" value="" id="fyXqName"/>
+		<div id="container">
+			<div class="ui_content" >
+				<div class="ui_text_indent">
+					<div id="box_border" style="border: 0;">
+						<div id="box_bottom">
+							<input type="button" value="删除" class="ui_input_btn01" onclick="batchDel();" /> 
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui_content">
+				<div class="ui_tb">
+					<table class="table" id="tableFirst" cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
+						<tr>
+							<th width="30"><input type="checkbox" id="all" onclick="selectOrClearAllCheckbox(this);" />
+							</th>
+							<th>名称</th>
+							<th>价格</th>
+							<th>库存</th>
+							<th>供应商</th>
+							<th>品类</th>
+							<th>描述</th>
+							<th>发布日期</th>
+							<th>图片</th>
+							<th>状态</th>
+							<th>操作</th>
+						</tr>
+						
+					</table>
+				</div>
+				<div class="ui_tb_h30">
+					<div class="ui_flt" style="height: 30px; line-height: 30px;">
+						共有<span class="ui_txt_bold04" id="counts">1</span>条记录，当前第
+						<span class="ui_txt_bold04" id="pages">1</span>
+						<span class="ui_txt_bold04">/</span>
+						<span class="ui_txt_bold04" id=pageCounts>1</span>页
+					</div>
+					<div class="ui_frt" style="height: 30px;">
+						<input type="button" value="首页"  class="ui_input_btn01"  onclick="backPage();"/>
+						<input type="button" value="上一页" class="ui_input_btn01" onclick="upPage();" />
+						<input type="button" value="下一页" class="ui_input_btn01" onclick="nextPage();" />
+						<input type="button" value="尾页"  class="ui_input_btn01"  onclick="toEnd();" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div id="yyyy">
+	</div>
+</body>
+<script type="text/javascript">
+	var level =getCookie("mrxisAdmin");
+	var loginid =getCookie("mrxadminId");
+
+	var tableTr=`<tr>
+		<th width="30"><input type="checkbox" id="all" onclick="selectOrClearAllCheckbox(this);" />
+		</th>
+		<th>名称</th>
+		<th>价格</th>
+		<th>库存</th>
+		<th>供应商</th>
+		<th>品类</th>
+		<th>描述</th>
+		<th>发布日期</th>
+		<th>图片</th>
+		<th>状态</th>
+		<th>操作</th>
+	</tr>`;
+
+	$(function(){
+		getAll("");
+		if(level=="0"){
+			getSupplierGoodsCount();
+		}else if(level=="1"){
+			getCounts();
+		}
+	});
+
+	function getCounts(){
+		url="/goods/countAll";
+		/*查询管理员信息*/
+		$.ajax({
+			type:"get",
+			url:url,
+			async:false,
+			success:function(result){
+				console.log("result"+result);
+				$("#counts").text(result.total);
+				var size=5*1;
+				var counts=result.total*1;
+				var endPages=Math.ceil(counts/size);
+				$("#pageCounts").text(endPages);
+			}
+		});
+	}
+	
+	/*供应商名称*/
+	function getSupplierGoodsCount(){
+		$.ajax({
+			type:"post",
+			async:false,
+            url: "/goods/getBySupplier?supplierid="+loginid, 
+            success: function (result) {
+            	$("#counts").text(result.length);
+				var size=5*1;
+				var counts=result.length*1;
+				var endPages=Math.ceil(counts/size);
+				$("#pageCounts").text(endPages);
+            }
+        });
+		return name;
+	 }
+	
+	function backPage(){
+		$("#tableFirst").html(tableTr);
+		$("#pages").text("1");
+		getAll("");
+	}
+	
+	function upPage(){
+		var pageNow=$("#pages").text();
+		var pageN= pageNow*1-1;
+		if(pageN>0){
+			$("#tableFirst").html(tableTr);
+			$("#pages").text(pageN);
+			if(level=="0"){
+				getAll("/goods/getBySupplier?page="+pageN+"&rows=5&supplierid="+loginid);
+			}else if(level=="1"){
+				getAll("/goods/getAll?page="+pageN+"&rows=5");
+			}
+		}else{
+			alert("当前是第一页");
+			return;
+		}
+	}
+	
+	function nextPage(){
+		var pageNow=$("#pages").text();
+		var pageN= pageNow*1+1;
+		var size=5*1;
+		var counts=$("#counts").text()*1;
+		var endPages=Math.ceil(counts/size);
+		if(pageN<=endPages){
+			$("#tableFirst").html(tableTr);
+			$("#pages").text(pageN);
+			if(level=="0"){
+				getAll("/goods/getBySupplier?page="+pageN+"&rows=5&supplierid="+loginid);
+			}else if(level=="1"){
+				getAll("/goods/getAll?page="+pageN+"&rows=5");
+			}
+		}else{
+			alert("当前已是最后一页");
+			return;
+		}
+	}
+
+	function toEnd(){
+		$("#tableFirst").html(tableTr);
+		var size=5*1;
+		var counts=$("#counts").text()*1;
+		var endPages=Math.ceil(counts/size);
+		$("#pages").text(endPages);
+		if(level=="0"){
+			getAll("/goods/getBySupplier?page="+endPages+"&rows=5&supplierid="+loginid);
+		}else if(level=="1"){
+			getAll("/goods/getAll?page="+endPages+"&rows=5");
+		}
+		
+		
+	}
+
+	/*查询生鲜信息*/
+	function getAll(url){
+		if(url==""||null==url){
+			url="/goods/getAll?page=1&rows=5";
+			if(level=="0"){
+				url="/goods/getBySupplier?page=1&rows=5&supplierid="+loginid;
+			}
+		}
+		
+		$.ajax({
+			type:"post",
+			url:url,
+			async:false,
+			success:function(result){
+				var suppliername="";
+				for(var i=0;i<result.length;i++){
+					/* var html=`<h1>${result[i].username}</h1>`; */
+					suppliername=getSupplierName(result[i].supplierid);
+					var html=`<tr>
+						<td><input type="checkbox" name="IDCheck" value="" class="acb" /></td>
+						<td>${result[i].goodsname}</td>
+						<td>${result[i].price}</td>
+						<td>${result[i].inventory}</td>
+						<td>${suppliername}</td>
+						<td>${result[i].sortid}</td>
+						<td>${result[i].details}</td>
+						<td>${result[i].pub_time}</td>
+						<td><img width="120" height="100" src=${result[i].pic_url}>
+						<td>${result[i].status}</td>
+						<td>
+							<a href="goods_edit.html?id=${result[i].id}" class="edit">编辑</a> 
+							<a href="javascript:deleteGoods(${result[i].id})">删除</a>
+						</td>
+					</tr>`;
+					$("#tableFirst").append(html);
+						
+					//alert(result);
+				}
+			}
+		});
+	}
+	
+	/*供应商名称*/
+	function getSupplierName(id){
+		var name="";
+		$.ajax({
+            type: "GET",
+            dataType: "json",
+            async:false,
+            url: '/supplier/info/' + id,
+            success: function (data) {
+                if (data != null) {
+                	name=data.data.username;
+                }else {
+                    alert(" getSupplierName data.data.username 无数据!");
+                }
+            }
+        });
+		return name;
+	 }
+			
+	/*删除*/
+    function deleteGoods(id) {
+		/* alert("deleteSupplier: id="+id); */
+		var r=confirm("请确认是否删除商品的信息？（前台商品将永久失效）");
+		if(r==true){
+			$.ajax({
+                   type: "GET",//方法类型
+                   dataType: "json",//预期服务器返回的数据类型
+                   url: "/goods/delete/" + id,//url
+                   success: function (result) {
+                       console.log(result);//打印服务端返回的数据
+                       if (result.resultCode == 200) {
+                           alert("用户已成功删除");
+                       }else {
+                       	alert("删除失败");
+                       }
+                   },
+                   error: function () {
+                   	//alert("ERROR！");
+                   }
+               });
+			location.reload();
+		}
+	}
+</script>
+</html>

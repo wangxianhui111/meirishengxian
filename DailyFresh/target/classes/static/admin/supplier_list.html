@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="style/authority/common_style.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="style/authority/jquery.fancybox-1.3.4.css" media="screen"></link>
+<script type="text/javascript" src="scripts/jquery/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="scripts/authority/commonAll.js"></script>
+<script type="text/javascript" src="scripts/fancybox/jquery.fancybox-1.3.4.js"></script>
+<script type="text/javascript" src="scripts/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="scripts/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" href="plugin/kindeditor/themes/default/default.css"/>
+<link rel="stylesheet" type="text/css" href="plugin/jquery-easyui-1.3.3/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="plugin/jquery-easyui-1.3.3/themes/default/easyui.css">
+<script type="text/javascript" src="plugin/jquery-easyui-1.3.3/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="plugin/jquery-easyui-1.3.3/locale/easyui-lang-zh_CN.js"></script>
+<title>信息管理系统</title>
+<script type="text/javascript">
+$(document).ready(function(){
+	/** 新增   **/
+	$("#addBtn").fancybox({
+    	'href'  : 'supplier_add.html',
+    	'width' : 733,
+        'height' : 530,
+        'type' : 'iframe',
+        'hideOnOverlayClick' : false,
+        'showCloseButton' : false,
+        'onClosed' : function() { 
+        	window.location.href = 'admin_list.html';
+        }
+    });
+	
+    /**编辑   **/
+    $("a.edit").fancybox({
+    	'width' : 733,
+        'height' : 530,
+        'type' : 'iframe',
+        'hideOnOverlayClick' : false,
+        'showCloseButton' : false,
+        'onClosed' : function() { 
+        	window.location.href = 'admin_list.html';
+        }
+    });
+});
+</script>
+<style>
+	.alt td{ background:black !important;}
+</style>
+</head>
+<body>
+	<form id="submitForm" name="submitForm" action="" method="post">
+		<input type="hidden" name="allIDCheck" value="" id="allIDCheck"/>
+		<input type="hidden" name="fangyuanEntity.fyXqName" value="" id="fyXqName"/>
+		<div id="container">
+			<div class="ui_content" >
+				<div class="ui_text_indent">
+					<div id="box_border" style="border: 0;">
+						<div id="box_bottom">
+							<input type="button" value="新增" class="ui_input_btn01" id="addBtn" /> 
+							<input type="button" value="删除" class="ui_input_btn01" onclick="batchDel();" /> 
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui_content">
+				<div class="ui_tb">
+					<table class="table" id="tableFirst" cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
+						<tr>
+							<th width="30"><input type="checkbox" id="all" onclick="selectOrClearAllCheckbox(this);" />
+							</th>
+							<th>帐户名</th>
+							<th>密码</th>
+							<th>创建日期</th>
+							<th>账号类型</th>
+							<th>操作</th>
+						</tr>
+						
+					</table>
+				</div>
+				<div class="ui_tb_h30">
+					<div class="ui_flt" style="height: 30px; line-height: 30px;">
+						共有<span class="ui_txt_bold04" id="counts">1</span>条记录，当前第
+						<span class="ui_txt_bold04" id="pages">1</span>
+						<span class="ui_txt_bold04">/</span>
+						<span class="ui_txt_bold04" id=pageCounts>1</span>页
+					</div>
+					<div class="ui_frt" style="height: 30px;">
+						<input type="button" value="首页"  class="ui_input_btn01"  onclick="backPage();"/>
+						<input type="button" value="上一页" class="ui_input_btn01" onclick="upPage();" />
+						<input type="button" value="下一页" class="ui_input_btn01" onclick="nextPage();" />
+						<input type="button" value="尾页"  class="ui_input_btn01"  onclick="toEnd();" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div id="yyyy">
+	</div>
+</body>
+		<script type="text/javascript">
+			var tableTr=`<tr>
+				<th width="30"><input type="checkbox" id="all" onclick="selectOrClearAllCheckbox(this);" />
+				</th>
+				<th>帐户名</th>
+				<th>密码</th>
+				<th>创建日期</th>
+				<th>账号类型</th>
+				<th>操作</th>
+			</tr>`;
+		
+			$(function(){
+				getAllSuppliers("");
+				getCounts();
+			});
+			
+			function getCounts(){
+				url="/supplier/countS";
+				/*查询管理员信息*/
+				$.ajax({
+					type:"get",
+					url:url,
+					async:false,
+					success:function(result){
+						console.log("result"+result);
+						$("#counts").text(result.total);
+						var size=5*1;
+						var counts=result.total*1;
+						var endPages=Math.ceil(counts/size);
+						$("#pageCounts").text(endPages);
+					}
+				});
+			}
+			
+			function backPage(){
+				$("#tableFirst").html(tableTr);
+				$("#pages").text("1");
+				getAllSuppliers("");
+			}
+			
+			function upPage(){
+				var pageNow=$("#pages").text();
+				var pageN= pageNow*1-1;
+				if(pageN>0){
+					$("#tableFirst").html(tableTr);
+					$("#pages").text(pageN);
+					getAllSuppliers("/supplier/getAllSuppliers?page="+pageN+"&rows=5");
+				}else{
+					alert("当前是第一页");
+					pageN=0;
+					return;
+				}
+			}
+			
+			function nextPage(){
+				var pageNow=$("#pages").text();
+				var pageN= pageNow*1+1;
+				var size=5*1;
+				var counts=$("#counts").text()*1;
+				var endPages=Math.ceil(counts/size);
+				if(pageN<=endPages){
+					$("#tableFirst").html(tableTr);
+					$("#pages").text(pageN);
+					getAllSuppliers("/supplier/getAllSuppliers?page="+pageN+"&rows=5");
+				}else{
+					alert("当前已是最后一页");
+					return;
+				}
+			}
+				
+			function toEnd(){
+				$("#tableFirst").html(tableTr);
+				var size=5*1;
+				var counts=$("#counts").text()*1;
+				var endPages=Math.ceil(counts/size);
+				$("#pages").text(endPages);
+				getAllSuppliers("/supplier/getAllSuppliers?page="+endPages+"&rows=5");
+			}
+			
+			
+			function getAllSuppliers(url){
+				if(url==""||null==url){
+					url="/supplier/getAllSuppliers?page=1&rows=5";
+				}
+				/*查询管理员信息*/
+				$.ajax({
+					type:"post",
+					url:url,
+					async:false,
+					success:function(result){
+						console.log(result);
+						for(var i=0;i<result.length;i++){
+							/* var html=`<h1>${result[i].username}</h1>`; */
+							if(result[i].is_admin==0){
+								var html=`<tr>
+									<td><input type="checkbox" name="IDCheck" value="" class="acb" /></td>
+									<td>${result[i].username}</td>
+									<td>${result[i].password}</td>
+									<td>${result[i].create_time}</td>
+									<td>供应商</td>
+									<td>
+										<a href="supplier_edit.html?id=${result[i].id}" class="edit">编辑</a> 
+										<a href="javascript:deleteSupplier(${result[i].id})">删除</a>
+									</td>
+								</tr>`;
+								$("#tableFirst").append(html);
+							}
+						}
+					}
+				});
+			}
+			
+			
+			/*删除*/
+		    function deleteSupplier(id) {
+		    	$.ajax({
+                    type: "GET",//方法类型
+                    dataType: "json",//预期服务器返回的数据类型
+                    url: "/supplier/delete/" + id,//url
+                    success: function (result) {
+                        console.log(result);//打印服务端返回的数据
+                        if (result.resultCode == 200) {
+                            
+                        }else {
+                        	alert("删除失败");
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+		    	location.reload();
+			}
+					
+		</script>
+</html>

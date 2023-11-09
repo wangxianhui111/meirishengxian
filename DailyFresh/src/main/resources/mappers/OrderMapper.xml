@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.neusoft.fresh.dao.OrderDao" >
+
+  <resultMap id="BaseResultMap"  type="com.neusoft.fresh.model.Order">
+     <id column="id" property="id"  jdbcType="INTEGER"/>
+     <result column="goodsid"  property="goodsid"  jdbcType="INTEGER"/>
+     <result column="buyerid"  property="buyerid"  jdbcType="INTEGER"/>
+     <result column="supplierid"  property="supplierid"  jdbcType="INTEGER"/>
+     <result column="totalPrice"  property="totalPrice"  jdbcType="DECIMAL"/>
+     <result column="order_time"  property="order_time"  jdbcType="VARCHAR"/>
+     <result column="order_address"  property="order_address"  jdbcType="VARCHAR"/>
+     <result column="status"  property="status"  jdbcType="VARCHAR"/>
+     <result column="num"  property="num"  jdbcType="INTEGER"/>
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select * from meirixian.order ORDER BY id DESC
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectBySupplier" parameterType="java.util.Map"  resultMap="BaseResultMap">
+       select *from meirixian.order  where supplierid=#{supplierid} ORDER BY id DESC
+       <if test="start!=null and size!=null">
+       limit #{start},#{size}
+       </if> 
+  </select>
+  
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from meirixian.order
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="send" parameterType="java.lang.Integer" >
+    update meirixian.order set status=1
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <delete id="sure" parameterType="java.lang.Integer" >
+    update meirixian.order set status=2
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  
+  <insert id="insert" parameterType="com.neusoft.fresh.model.Order" >
+    insert into meirixian.order(
+    goodsid,
+    buyerid,
+    supplierid,
+    totalPrice,
+    order_time,
+    order_address,
+    status,
+    num
+    )
+    values (#{goodsid,jdbcType=INTEGER} 
+    	    ,#{buyerid,jdbcType=INTEGER} 
+    	    ,#{supplierid,jdbcType=INTEGER} 
+    	    ,#{totalPrice,jdbcType=DECIMAL} 
+    	    ,#{order_time,jdbcType=VARCHAR} 
+    	    ,#{order_address,jdbcType=VARCHAR} 
+    	    ,#{status,jdbcType=VARCHAR} 
+    	    ,#{num,jdbcType=INTEGER} 
+    	    )
+  </insert>
+  
+  
+  <update id="updateByPrimaryKey" parameterType="com.neusoft.fresh.model.Order">
+    update meirixian.order
+      <set>
+        
+        
+        <if test="goodsid != null" >
+        goodsid = #{goodsid,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="buyerid != null" >
+        buyerid = #{buyerid,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="supplierid != null" >
+        supplierid = #{supplierid,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="totalPrice != null" >
+        totalPrice = #{totalPrice,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="order_time != null" >
+        order_time = #{order_time,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="order_address != null" >
+        order_address = #{order_address,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="num != null" >
+        num = #{num,jdbcType=VARCHAR},
+        </if>
+        
+      </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    
+  <select id="getByUser" parameterType="java.util.Map"  resultMap="BaseResultMap">
+       select *from meirixian.order where buyerid=#{userid} ORDER BY id DESC
+       <if test="start!=null and size!=null">
+       limit #{start},#{size}
+       </if>
+  </select>
+  
+ <select id="countByUser" resultType="java.lang.Integer">
+       select count(*) from meirixian.order where buyerid=#{userid}
+  </select>
+  
+  <select id="select" parameterType="java.util.Map"  resultMap="BaseResultMap">
+       select * from meirixian.order
+       <if test="start!=null and size!=null">
+       limit #{start},#{size}
+       </if>
+  </select>
+  
+  <select id="count" parameterType="java.util.Map" resultType="int">
+       select count(*) from meirixian.order
+  </select>
+</mapper>

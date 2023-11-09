@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.neusoft.fresh.dao.Goods_sortsDao" >
+
+  <resultMap id="BaseResultMap"  type="com.neusoft.fresh.model.Goods_sorts">
+     <id column="id" property="id"  jdbcType="INTEGER"/>
+     <result column="sortname"  property="sortname"  jdbcType="VARCHAR"/>
+     <result column="type"  property="type"  jdbcType="VARCHAR"/>
+  </resultMap>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select * from goods_sorts
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from goods_sorts
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  
+  <insert id="insert" parameterType="com.neusoft.fresh.model.Goods_sorts" >
+    insert into goods_sorts(
+    sortname,
+    type
+    )
+    values (#{sortname,jdbcType=VARCHAR} 
+    	    ,#{type,jdbcType=VARCHAR} 
+    	    )
+  </insert>
+  
+  
+  <update id="updateByPrimaryKey" parameterType="com.neusoft.fresh.model.Goods_sorts">
+    update goods_sorts
+      <set>
+        
+        
+        <if test="sortname != null" >
+        sortname = #{sortname,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+        </if>
+        
+      </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="select" parameterType="java.util.Map"  resultMap="BaseResultMap">
+       select *from goods_sorts  
+       <if test="start!=null and size!=null">
+       limit #{start},#{size}
+       </if>
+  </select>
+  
+  <select id="count" parameterType="java.util.Map" resultType="int">
+       select count(*) from goods_sorts 
+  </select>
+</mapper>

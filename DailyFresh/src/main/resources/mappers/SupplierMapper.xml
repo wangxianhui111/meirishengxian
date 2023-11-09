@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.neusoft.fresh.dao.SupplierDao" >
+
+  <resultMap id="BaseResultMap"  type="com.neusoft.fresh.model.Supplier">
+     <id column="id" property="id"  jdbcType="INTEGER"/>
+     <result column="username"  property="username"  jdbcType="VARCHAR"/>
+     <result column="password"  property="password"  jdbcType="VARCHAR"/>
+     <result column="create_time"  property="create_time"  jdbcType="VARCHAR"/>
+     <result column="is_admin"  property="is_admin"  jdbcType="VARCHAR"/>
+  </resultMap>
+  
+    
+  <select id="login" parameterType="com.neusoft.fresh.model.Supplier" resultMap="BaseResultMap">
+        select * from supplier where username=#{username} and password=#{password}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select * from supplier
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select * from supplier
+    where username = #{username,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from supplier
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  
+  <insert id="insert" parameterType="com.neusoft.fresh.model.Supplier" >
+    insert into supplier(
+    username,
+    password,
+    create_time,
+    is_admin
+    )
+    values (#{username,jdbcType=VARCHAR} 
+    	    ,#{password,jdbcType=VARCHAR} 
+    	    ,#{create_time,jdbcType=VARCHAR} 
+    	    ,#{is_admin,jdbcType=VARCHAR} 
+    	    )
+  </insert>
+  
+  
+  <update id="updateByPrimaryKey" parameterType="com.neusoft.fresh.model.Supplier">
+    update supplier
+      <set>
+        
+        
+        <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="create_time != null" >
+        create_time = #{create_time,jdbcType=VARCHAR},
+        </if>
+        
+        
+        <if test="is_admin != null" >
+        is_admin = #{is_admin,jdbcType=VARCHAR},
+        </if>
+        
+      </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="selectA" parameterType="java.util.Map"  resultMap="BaseResultMap">
+       select *from supplier where is_admin=1
+       <if test="start!=null and size!=null">
+       limit #{start},#{size}
+       </if>
+  </select>
+  
+  <select id="countA" parameterType="java.util.Map" resultType="int">
+       select count(*) from supplier where is_admin=1
+  </select>
+  
+  <select id="selectS" parameterType="java.util.Map"  resultMap="BaseResultMap">
+       select *from supplier where is_admin=0
+       <if test="start!=null and size!=null">
+       limit #{start},#{size}
+       </if>
+  </select>
+  
+  <select id="countS" parameterType="java.util.Map" resultType="int">
+       select count(*) from supplier where is_admin=0
+  </select>
+</mapper>

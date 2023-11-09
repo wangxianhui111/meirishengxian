@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>生鲜列表</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="keywords" content="" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+<link href="css/font-awesome.css" rel="stylesheet"> 
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$(".scroll").click(function(event){		
+			event.preventDefault();
+			$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+		});
+	});
+</script> 
+<!--[if lt IE 9]>
+  <script src="js/html5shiv.js"></script>
+<![endif]-->
+</head>
+<body>
+	<!-- banner -->
+	<div class="banner about-banner">
+		<div class="header">
+			<div class="container">
+				<div class="header-left">
+					<div class="w3layouts-logo">
+						<h1>
+							<a href="index.html">每日鲜 <span><sup>Life</sup></span></a>
+						</h1>
+					</div>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+		<div class="header-bottom">
+			<div class="container">
+				<div class="top-nav">
+					<nav class="navbar navbar-default">
+							<div class="navbar-header">
+								<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+									<span class="sr-only">Toggle navigation</span>
+									<span class="icon-bar"></span>
+									<span class="icon-bar"></span>
+									<span class="icon-bar"></span>
+								</button>
+							</div>
+						<!-- Collect the nav links, forms, and other content for toggling -->
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+							<ul class="nav navbar-nav">
+								<li><a class="active list-border" href="index.html">主页</a></li>
+								<li><a href="goodsList.html">生鲜列表</a></li>
+								<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">分类<span class="caret"></span></a>
+									<ul class="dropdown-menu">
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=1">水果</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=2">肉类</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=3">蔬菜</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=4">水产</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=5">乳品</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=6">酒饮</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=7">熟食</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=8">轻食</a></li>
+									</ul>
+								</li>								
+								<li><a href="cart.html">购物车</a></li>
+								<li><a class="list-border1" href="userInfo.html">个人中心</a></li>
+								<li><a class="list-border1" href="order.html">订单配送</a></li>
+							</ul>	
+							<div class="clearfix"> </div>
+						</div>	
+					</nav>	
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- //banner -->
+	<div class="about-heading">	
+		<div class="container">
+			<h2>生鲜食品</h2>
+		</div>
+	</div>
+	<!-- blog -->
+	<div class="blog">
+		<div class="container">
+			<div class="agile-blog-grids">
+				<div class="col-md-8 agile-blog-grid-left"  style="width: 100%;float: left;">
+					<div id="goodsTale">
+					
+					</div>
+					<p style="clear:both"></p>
+					<nav>
+						<ul class="pagination">
+							<li>
+								<a onclick="upPage()" aria-label="Previous">
+									<span  aria-hidden="true">«</span>
+								</a>
+							</li>
+							<li><a href="#" id="pages">1</a></li>
+							<li><a href="#" > / </a></li> 
+							<li><a href="#" id="pageCounts">1</a></li>
+							<input type="hidden" id="counts">
+							<li>
+								<a onclick="nextPage()" aria-label="Next">
+									<span  aria-hidden="true">»</span>
+								</a> 
+							</li>
+						</ul>
+					</nav>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>
+	<!-- //blog -->
+	<script src="js/SmoothScroll.min.js"></script>
+	<script type="text/javascript" src="js/move-top.js"></script>
+	<script type="text/javascript" src="js/easing.js"></script>
+	<!-- here stars scrolling icon -->
+	<script type="text/javascript">
+	$(function(){
+		getAll("");
+		getCounts();
+		$().UItoTop({ easingType: 'easeOutQuart' });
+	});
+	
+	function getAll(url){
+		var typeid = getQueryStringByName("type");
+		$("#goodsTale").html("");
+		if(typeid!=""){
+			var pageNow=$("#pages").text();
+			var pageSize=6;
+			var currPage=1;
+				/*查询商品信息*/
+				$.ajax({
+					type:"post",
+					url:"/goods/selectByType",
+					data:{"page":currPage,"rows":pageSize,"typeid":typeid},
+					success:function(result){
+						var sex="";
+						for(var i=0;i<result.length;i++){
+							/* var html=`<h1>${result[i].username}</h1>`; */
+							var html=`<div style="width: 33%;float: left;margin-bottom:20px;">
+										<div>
+											<a href="goodsInfo.html?id=${result[i].id}">
+											<img height="220px" width="260px" src=${result[i].pic_url} alt="" />
+											</a>
+										</div>
+										<div class="blog-left-grids" >
+											<div class="blog-left-right" style="margin-left: 0px;">
+												<div class="blog-left-right-top">
+													<h4><a href="goodsInfo.html?id=${result[i].id}">${result[i].goodsname}.</a></h4>
+													<p>Price. ￥<a href="#">${result[i].price}</a> 
+													&nbsp;&nbsp; on ${result[i].pub_time} 
+													&nbsp;&nbsp; <a href="#">库存 (${result[i].inventory})</a></p>
+												</div>
+											</div>
+											<div class="clearfix"> </div>
+										</div>
+									</div>`;
+							$("#goodsTale").append(html);
+						}
+					}
+				});
+			}else{
+				if(url==""||null==url){
+					url="/goods/getAll?page=1&rows=6";
+				}
+				
+				/*查询商品信息*/
+				$.ajax({
+					type:"post",
+					url:url,
+					async:false,
+					success:function(result){
+						var sex="";
+						for(var i=0;i<result.length;i++){
+							var html=`<div style="width: 33%;float: left;margin-bottom:20px;">
+										<div>
+											<a href="goodsInfo.html?id=${result[i].id}">
+											<img height="220px" width="260px" src=${result[i].pic_url} alt="" />
+											</a>
+										</div>
+										<div class="blog-left-grids" >
+											<div class="blog-left-right" style="margin-left: 0px;">
+												<div class="blog-left-right-top">
+													<h4><a href="goodsInfo.html?id=${result[i].id}">${result[i].goodsname}.</a></h4>
+													<p>Price. ￥<a href="#">${result[i].price}</a> 
+													&nbsp;&nbsp; on ${result[i].pub_time} 
+													&nbsp;&nbsp; <a href="#">库存 (${result[i].inventory})</a></p>
+												</div>
+											</div>
+											<div class="clearfix"> </div>
+										</div>
+									</div>`;
+							$("#goodsTale").append(html);
+						}
+					}
+				});
+			}
+		}
+
+	function getCounts(){
+		url="/goods/countAll";
+		/*查询管理员信息*/
+		$.ajax({
+			type:"get",
+			url:url,
+			async:false,
+			success:function(result){
+				console.log("result"+result);
+				$("#counts").text(result.total);
+				var size=6*1;
+				var counts=result.total*1;
+				var endPages=Math.ceil(counts/size);
+				$("#pageCounts").text(endPages);
+			}
+		});
+	}
+	
+	
+	function backPage(){
+		$("#pages").text("1");
+		getAll("");
+	}
+	
+	function upPage(){
+		var pageNow=$("#pages").text();
+		var pageN= pageNow*1-1;
+		if(pageN>0){
+			$("#pages").text(pageN);
+			getAll("/goods/getAll?page="+pageN+"&rows=6");
+		}else{
+			alert("当前是第一页");
+			return;
+		}
+	}
+	
+	function nextPage(){
+		var pageNow=$("#pages").text();
+		var pageN= pageNow*1+1;
+		var size=6*1;
+		var counts=$("#counts").text()*1;
+		var endPages=Math.ceil(counts/size);
+		if(pageN<=endPages){
+			$("#pages").text(pageN);
+			getAll("/goods/getAll?page="+pageN+"&rows=6");
+		}else{
+			alert("当前已是最后一页");
+			return;
+		}
+	}
+
+	function toEnd(){
+		var size=6*1;
+		var counts=$("#counts").text()*1;
+		var endPages=Math.ceil(counts/size);
+		$("#pages").text(endPages);
+		getAll("/goods/getAll?page="+endPages+"&rows=6");
+	}
+	
+	function getQueryStringByName(name) {
+        var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+        if (result == null || result.length < 1) {
+            return "";
+        }
+        return result[1];
+    }
+	</script>
+	<!-- //here ends scrolling icon -->
+</body>	
+</html>

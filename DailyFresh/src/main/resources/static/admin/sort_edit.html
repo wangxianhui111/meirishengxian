@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>信息管理系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="scripts/jquery/jquery-1.7.1.js"></script>
+<link href="style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="style/authority/common_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="scripts/authority/commonAll.js"></script>
+<script type="text/javascript" src="scripts/jquery/jquery-1.4.4.min.js"></script>
+<script src="scripts/My97DatePicker/WdatePicker.js" type="text/javascript" defer="defer"></script>
+<script type="text/javascript" src="scripts/artDialog/artDialog.js?skin=default"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		/*
+		 * 提交
+		 */
+		$("#submitbutton").click(function() {
+			if(validateForm()){
+				checkFyFhSubmit();
+			}
+		});
+		
+		/*
+		 * 取消
+		 */
+		$("#cancelbutton").click(function() {
+			/**  关闭弹出iframe  **/
+			window.parent.$.fancybox.close();
+		});
+		
+		var result = 'null';
+		if(result =='success'){
+			/**  关闭弹出iframe  **/
+			window.parent.$.fancybox.close();
+		}
+		
+		var id = getQueryStringByName("id");
+        if (id == null) {
+            alert("无数据!");
+            return;
+        }
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: '/goods_sorts/info/' + id,
+            success: function (data) {
+                if (data != null) {
+                	$('#sortname').val(data.data.sortname);
+            		$("#type").val(data.data.type);
+            		$("#id").val(data.data.id);
+                    //console.log(data.articleContent);
+                }
+                else {
+                    alert("无数据!");
+                }
+            }
+        });
+	});
+
+	function getQueryStringByName(name) {
+        var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+        if (result == null || result.length < 1) {
+            return "";
+        }
+        return result[1];
+    }
+    
+	/** 表单验证  **/
+	function validateForm(){
+		if($("#id").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'未识别到品类主键ID，可能处于异常访问', ok:true,});
+			return false;
+		}
+		if($("#sortname").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写账号', ok:true,});
+			return false;
+		}
+		if($("#type").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写密码', ok:true,});
+			return false;
+		}
+		return true;
+	}
+	
+	function checkFyFhSubmit(){
+		var id = $('#id').val();
+		var sortname = $('#sortname').val();
+		var type = $("#type").val();
+		var url="/goods_sorts/update";
+		if(url!="" && type!=""){
+			// 异步判断该房室是否存在，如果已存在，给用户已提示哦
+			var data = {"sortname":sortname,"type":type,"id":id};
+			$.ajax({
+				type:"POST",
+				url:url,
+				data:JSON.stringify(data),
+				dataType: "json",//预期服务器返回的数据类型
+				contentType: "application/json; charset=utf-8",
+				success:function(result){
+				//alert(data);
+				console.log(result);//打印服务端返回的数据
+	                if (result.resultCode == 200) {
+	                	art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'更新成功', ok:true,});
+	                }else {
+	                	art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'操作失败', ok:true,});
+	                }
+				},
+	            error: function () {
+	            	art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'操作失败', ok:true,});
+	            }
+			});
+           	window.location.href = 'sort_list.html';
+		}
+		return true;
+	}
+</script>
+</head>
+<body>
+<form id="submitForm" name="submitForm" action="/xngzf/archives/initFangyuan.action" method="post">
+	<input type="hidden" name="fyID" value="14458625716623" id="fyID"/>
+	<div id="container">
+		<div class="ui_content">
+			<table cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+				<input type="text" id="id" name="id"  value="" hidden="" />
+				<tr>
+					<td style="width: 60px;" class="ui_text_rt">品类名称 </td>
+					<td class="ui_text_lt">
+						<input type="text" id="sortname" name="sortname"  value="" class="ui_input_txt01"  />
+						<span id="usernameTip"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">所属大类 </td>
+					<td class="ui_text_lt">
+						<select id="type" name="type" class="ui_select01" disabled="disabled">
+                            <option value="">
+                            <option value="1">水果</option>
+                            <option value="2">肉类</option>
+                            <option value="3">蔬菜</option>
+                            <option value="4">水产</option>
+                            <option value="5">乳品</option>
+                            <option value="6">酒饮</option>
+                            <option value="7">熟食</option>
+                            <option value="8">轻食</option>
+                        </select>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td class="ui_text_lt">
+						&nbsp;<input id="submitbutton" type="button" value="提交" class="ui_input_btn01"/>
+						&nbsp;<input id="cancelbutton" type="button" value="取消" class="ui_input_btn01"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</form>
+
+</body>
+</html>

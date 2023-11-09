@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>登录</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="keywords" content="" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- bootstrap-css -->
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<!--// bootstrap-css -->
+<!-- css -->
+<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+<!--// css -->
+<!-- font-awesome icons -->
+<link href="css/font-awesome.css" rel="stylesheet"> 
+<!-- //font-awesome icons -->
+<!-- font -->
+<!--<link href="http://fonts.googleapis.com/css?family=Playball&amp;subset=latin-ext" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300' rel='stylesheet' type='text/css'>-->
+<!-- //font -->
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/laydate/laydate.js"></script>
+<style type="text/css">
+#register_but {
+    background-color:#00BFFF; /* Green */
+    border: none;
+    color: white;
+    padding: 8px 22px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    float: left; 
+}
+#register_but:hover {
+    background-color: #1E90FF; /* Green */
+}
+#login_but {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 8px 22px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    float: right;
+}
+#login_but:hover {
+    background-color: #228B22; /* Green */
+}
+</style>
+<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$(".scroll").click(function(event){		
+			event.preventDefault();
+			$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+		});
+		
+		laydate.render({
+			elem: '#birthday'
+		});
+	});
+	
+</script> 
+<!--[if lt IE 9]>
+  <script src="js/html5shiv.js"></script>
+<![endif]-->
+</head>
+<body>
+	<!-- banner -->
+	<div class="banner about-banner">
+		<div class="header">
+			<div class="container">
+				<div class="header-left">
+					<div class="w3layouts-logo">
+						<h1>
+							<a href="index.html">每日鲜 <span><sup>Life</sup></span></a>
+						</h1>
+					</div>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+		<div class="header-bottom">
+			<div class="container">
+				<div class="top-nav">
+					<nav class="navbar navbar-default">
+							<div class="navbar-header">
+								<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+									<span class="sr-only">Toggle navigation</span>
+									<span class="icon-bar"></span>
+									<span class="icon-bar"></span>
+									<span class="icon-bar"></span>
+								</button>
+							</div>
+						<!-- Collect the nav links, forms, and other content for toggling -->
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+							<ul class="nav navbar-nav">
+								<li><a class="active list-border" href="index.html">主页</a></li>
+								<li><a href="goodsList.html">生鲜列表</a></li>
+								<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">分类<span class="caret"></span></a>
+									<ul class="dropdown-menu">
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html">水果</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html">肉类</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html">蔬菜</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html">水产</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html">乳品</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html">酒饮</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html">熟食</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html">轻食</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html"></a></li>
+									</ul>
+								</li>								
+								<li><a href="sort.html">购物车</a></li>
+								<li><a class="list-border1" href="userInfo.html">个人中心</a></li>
+								<li><a class="list-border1" href="order.html">订单配送</a></li>
+							</ul>
+							<div class="clearfix"> </div>
+						</div>	
+					</nav>	
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- //banner -->
+	<div class="about-heading">	
+		<div class="container">
+			<h2>注册</h2>
+		</div>
+	</div>
+	<!-- contact -->
+	<div class="contact">
+		<div class="container">
+			<div class="agile-contact-form">
+				<div class="col-md-6 contact-form-left">
+					<div class="w3layouts-contact-form-top">
+						<h3>注册用户 享受权限</h3>
+						<p>1 每日生鲜商品实时推送浏览.</p>
+						<p>2 个人购物车清单浏览.</p>
+						<p>3 订单购物.</p>
+						<p>4 物流配送查询.</p>
+					</div>
+					<div class="agileits-contact-address">
+					<h3>售后咨询</h3>
+						<ul>
+							<li><i class="fa fa-phone" aria-hidden="true"></i> <span>+1 234 567 8901</span></li>
+							<li><i class="fa fa-phone fa-envelope" aria-hidden="true"></i> <span><a href="mailto:example@email.com">mail@example.com</a></span></li>
+							<li><i class="fa fa-map-marker" aria-hidden="true"></i> <span>Eiusmod Tempor inclore Place,Kingsport 56777.</span></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-6 contact-form-right">
+					<div class="contact-form-top">
+						<h3>填写个人信息</h3>
+					</div>
+					<div class="agileinfo-contact-form-grid">
+						<form action="#" method="post" >
+							<input style="width: 70%" type="text" name="username" id="username"  placeholder="Account" onblur="checkFyFh();" required="">
+							<span id="usernameTip"></span>
+							<input style="width: 70%" type="password" name="password" id="password"  placeholder="Password" required="">
+							
+							<div class="input-group-btn" style="margin-bottom: 20px;">
+								<button style="margin-bottom: 20px;" type="button"  id="sex" name="sex" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">性别： <span class="caret"></span></button>
+								<ul class="dropdown-menu dropdown-menu-right" style="width: 200px;">
+									<li><a id="boy" href="#">男</a></li>
+									<li><a id="girl" href="#">女</a></li>
+								</ul>
+							</div>
+							
+							<input style="width: 70%" type="text" name="birthday" id="birthday" placeholder="生日" required="" class="ui_input_txt01">
+							<input style="width: 70%" type="text"  onkeyup="value=value.replace(/[^\d]/g,'')" name="money" id="money" placeholder="帐户金额" required="">
+							<textarea style="width: 70%;height: 70px;"  name="address" placeholder="居住地址（省/市/区/街道/门牌号）" id="address" required=""></textarea>
+							<input type="button" id="register_but" value="提交"  >
+							<a id="login_but" href="login.html">有账号，直接登录</a>
+						</form>
+					</div>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>
+	<!-- //contact -->
+	<script src="js/SmoothScroll.min.js"></script>
+	<script type="text/javascript" src="js/move-top.js"></script>
+	<script type="text/javascript" src="js/easing.js"></script>
+	<!-- here stars scrolling icon -->
+	<script type="text/javascript">
+	$("#register_but").click(function() {
+		if(validateForm()&&checkFyFh()){
+			checkFyFhSubmit();
+		}
+	});
+	/** 表单验证  **/
+	function validateForm(){
+		if($("#username").val()==""){
+			alert("请填写账号");
+			return false;
+		}
+		if($("#password").val()==""){
+			alert("请填写密码");
+			return false;
+		}
+		if($("#sex").val()==""){
+			alert("请填写性别");
+			return false;
+		}
+		if($("#birthday").val()==""){
+			alert("请填写生日");
+			return false;
+		}
+		if($("#address").val()==""){
+			alert("请填写地址");
+			return false;
+		}
+		if($("#money").val()==""){
+			$("#money").val("0");
+		}
+		return true;
+	}
+	
+	/** 检测账号是否存在  **/
+	function checkFyFh(){
+		var username = $('#username').val();
+		if(username!=""){
+			// 异步判断该房室是否存在，如果已存在，给用户已提示哦
+			$.ajax({
+				type:"GET",
+				url:"/user/check/"+username,
+				dataType : "json",
+				success:function(data){
+					if(data.res=="1"){
+						 $('#usernameTip').text('检测账号已存在');
+						 $('#usernameTip').css("color","red");
+						 /* append("<span></span>"); */
+						 /* art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'该账号名在系统中已经存在，\n请重新填写帐户名', ok:true,}); */
+						 $("#username").val("");
+						 return false;
+					}else{
+						$('#usernameTip').text('验证通过');
+						$('#usernameTip').css("color","green");
+					}
+				}
+			});
+		}
+		return true;
+	}
+	
+	function checkFyFhSubmit(){
+		var username = $('#username').val();
+		var password = $("#password").val();
+		var sex = $("#sex").val();
+		var birthday = $("#birthday").val();
+		var address = $("#address").val();
+		var money = $("#money").val();
+		var url="/user/insert";
+		if(username!="" && password!="" && sex!="" && birthday!="" && address!="" && money!=""){
+			var data = {"username":username,"password":password,"sex":sex,"birthday":birthday,"address":address,"money":money};
+			$.ajax({
+				type:"POST",
+				url:url,
+				data:JSON.stringify(data),
+				dataType: "json",	//预期服务器返回的数据类型
+				contentType: "application/json; charset=utf-8",
+				success:function(result){
+					console.log(result);//打印服务端返回的数据
+	                if (result.resultCode == 200) {
+	                	alert("保存成功");
+	                }else {
+	                	alert("操作失败");
+	                }
+				},
+	            error: function () {
+	                alert("操作失败");
+	            }
+			});
+		}
+		location.href="index.html";
+	}
+	
+		$(document).ready(function() {
+		/*
+			var defaults = {
+			containerID: 'toTop', // fading element id
+			containerHoverID: 'toTopHover', // fading element hover id
+			scrollSpeed: 1200,
+			easingType: 'linear' 
+			};
+		*/
+							
+		$().UItoTop({ easingType: 'easeOutQuart' });
+		});
+			
+		$("#boy").click(function(){
+			$("#sex").val("1");
+			$("#sex").html("性别：男 <span class=\"caret\"></span>");
+			
+		})
+		$("#girl").click(function(){
+			$("#sex").val("0");
+			$("#sex").html("性别：女 <span class=\"caret\"></span> ");
+		})
+		
+	</script>
+	<!-- //here ends scrolling icon -->
+</body>	
+</html>

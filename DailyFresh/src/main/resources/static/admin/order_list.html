@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="scripts/jquery/jquery-1.7.1.js"></script>
+<link href="style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="style/authority/common_style.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="plugin/jquery-easyui-1.3.3/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="plugin/jquery-easyui-1.3.3/themes/icon.css">
+<link rel="stylesheet" href="plugin/kindeditor/themes/default/default.css"/>
+<title>信息管理系统</title>
+<script src="js/check.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){ 
+		var type = getQueryStringByName("type");
+        if (type == null) {
+            alert("无数据!");
+            return;
+        }
+	});
+	function getQueryStringByName(name) {
+        var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+        if (result == null || result.length < 1) {
+            return "";
+        }
+        return result[1];
+    }
+    
+</script>
+<style>
+	.alt td{ background:black !important;}
+</style>
+</head>
+<body>
+	<form id="submitForm" name="submitForm" action="" method="post">
+		<input type="hidden" name="allIDCheck" value="" id="allIDCheck"/>
+		<input type="hidden" name="fangyuanEntity.fyXqName" value="" id="fyXqName"/>
+		<div id="container">
+			<div class="ui_content" >
+				<div class="ui_text_indent">
+					<div id="box_border" style="border: 0;">
+						<div id="box_bottom">
+							<input type="button" value="删除" class="ui_input_btn01" onclick="batchDel();" /> 
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui_content">
+				<div class="ui_tb">
+					<table class="table" id="tableFirst" cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
+						<tr>
+							<th width="30"><input type="checkbox" id="all" onclick="selectOrClearAllCheckbox(this);" />
+							</th>
+							<th>商品</th>
+							<th>预览</th>
+							<th>买家</th>
+							<th>供应商</th>
+							<th>订单金额</th>
+							<th>支付日期</th>
+							<th>配送地址</th>
+							<th>数量</th>
+							<th>状态</th>
+							<th>操作</th>
+						</tr>
+						
+					</table>
+				</div>
+				<div class="ui_tb_h30">
+					<div class="ui_flt" style="height: 30px; line-height: 30px;">
+						共有<span class="ui_txt_bold04" id="counts">1</span>条记录，当前第
+						<span class="ui_txt_bold04" id="pages">1</span>
+						<span class="ui_txt_bold04">/</span>
+						<span class="ui_txt_bold04" id=pageCounts>1</span>页
+					</div>
+					<div class="ui_frt" style="height: 30px;">
+						<input type="button" value="首页"  class="ui_input_btn01"  onclick="backPage();"/>
+						<input type="button" value="上一页" class="ui_input_btn01" onclick="upPage();" />
+						<input type="button" value="下一页" class="ui_input_btn01" onclick="nextPage();" />
+						<input type="button" value="尾页"  class="ui_input_btn01"  onclick="toEnd();" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div id="yyyy">
+	</div>
+</body>
+<script type="text/javascript">
+
+var level =getCookie("mrxisAdmin");
+var loginid =getCookie("mrxadminId");
+
+	var tableTr=`<tr>
+		<th width="30"><input type="checkbox" id="all" onclick="selectOrClearAllCheckbox(this);" />
+		</th>
+		<th>商品</th>
+		<th>预览</th>
+		<th>卖家</th>
+		<th>供应商</th>
+		<th>订单金额</th>
+		<th>支付日期</th>
+		<th>配送地址</th>
+		<th>数量</th>
+		<th>状态</th>
+		<th>操作</th>
+	</tr>`;
+
+	$(function(){
+		getAll("");
+		if(level=="0"){
+			getSupplierGoodsCount();
+		}else if(level=="1"){
+			getCounts();
+		}
+	});
+	
+	function getCounts(){
+		url="/order/countAll";
+		/*查询管理员信息*/
+		$.ajax({
+			type:"get",
+			url:url,
+			async:false,
+			success:function(result){
+				console.log("result"+result);
+				$("#counts").text(result.total);
+				var size=5*1;
+				var counts=result.total*1;
+				var endPages=Math.ceil(counts/size);
+				$("#pageCounts").text(endPages);
+			}
+		});
+	}
+	
+	/*供应商名称*/
+	function getSupplierGoodsCount(){
+		$.ajax({
+			type:"post",
+			async:false,
+            url: "/order/getBySupplier?supplierid="+loginid, 
+            success: function (result) {
+            	$("#counts").text(result.length);
+				var size=5*1;
+				var counts=result.length*1;
+				var endPages=Math.ceil(counts/size);
+				$("#pageCounts").text(endPages);
+            }
+        });
+		return name;
+	 }
+	
+	
+	function backPage(){
+		$("#tableFirst").html(tableTr);
+		$("#pages").text("1");
+		getAll("");
+	}
+	
+	function upPage(){
+		var pageNow=$("#pages").text();
+		var pageN= pageNow*1-1;
+		if(pageN>0){
+			$("#tableFirst").html(tableTr);
+			$("#pages").text(pageN);
+			if(level=="0"){
+				getAll("/order/getBySupplier?page="+pageN+"&rows=5&supplierid="+loginid);
+			}else if(level=="1"){
+				getAll("/order/getAll?page="+pageN+"&rows=5");
+			}
+		}else{
+			alert("当前是第一页");
+			return;
+		}
+	}
+	
+	function nextPage(){
+		var pageNow=$("#pages").text();
+		var pageN= pageNow*1+1;
+		var size=5*1;
+		var counts=$("#counts").text()*1;
+		var endPages=Math.ceil(counts/size);
+		if(pageN<=endPages){
+			$("#tableFirst").html(tableTr);
+			$("#pages").text(pageN);
+			if(level=="0"){
+				getAll("/order/getBySupplier?page="+pageN+"&rows=5&supplierid="+loginid);
+			}else if(level=="1"){
+				getAll("/order/getAll?page="+pageN+"&rows=5");
+			}
+		}else{
+			alert("当前已是最后一页");
+			return;
+		}
+	}
+	
+	function toEnd(){
+		$("#tableFirst").html(tableTr);
+		var size=5*1;
+		var counts=$("#counts").text()*1;
+		var endPages=Math.ceil(counts/size);
+		$("#pages").text(endPages);
+		if(level=="0"){
+			getAll("/order/getBySupplier?page="+endPages+"&rows=5&supplierid="+loginid);
+		}else if(level=="1"){
+			getAll("/order/getAll?page="+endPages+"&rows=5");
+		}
+	}
+	/*查询订单信息*/
+	function getAll(url){
+		if(url==""||null==url){
+			url="/order/getAll?page=1&rows=5";
+			if(level=="0"){
+				url="/order/getBySupplier?page=1&rows=5&supplierid="+loginid;
+			}
+		}
+		$.ajax({
+			type:"post",
+			url:url,
+			async:false,
+			success:function(result){
+				var sex="";
+				var status="";
+				var goodsname="";
+				var goodsPic="";
+				var suppliername="";
+				var userName="";
+				for(var i=0;i<result.length;i++){
+					var html;
+					var doHtml=`<a onclick="send(${result[i].id})" >确认发货</a> `;
+					if(level=="1"){
+						doHtml=``;
+					}
+					userName=getUserName(result[i].buyerid);
+					goodsname=getGoodsName(result[i].goodsid);
+					goodsPic=getGoodsPic(result[i].goodsid);
+					suppliername=getSupplierName(result[i].supplierid);
+					if(result[i].status==0){
+						status="已支付";
+						html=`<tr>
+							<td><input type="checkbox" name="IDCheck" value="" class="acb" /></td>
+							<td>${goodsname}</td>
+							<td><img width="60" height="50" src=${goodsPic}>
+							<td>${userName}</td>
+							<td>${suppliername}</td>
+							<td>${result[i].totalPrice}</td>
+							<td>${result[i].order_time}</td>
+							<td>${result[i].order_address}</td>
+							<td>${result[i].num}</td>
+							<td>${status}</td>
+							<td>
+								${doHtml}
+							</td>
+						</tr>`;
+					}
+					if(result[i].status==1||result[i].status==2){
+						if(result[i].status==1){
+							status="正在配送";
+						}
+						if(result[i].status==2){
+							status="确认收货（归档）";
+						}
+						html=`<tr>
+							<td><input type="checkbox" name="IDCheck" value="" class="acb" /></td>
+							<td>${goodsname}</td>
+							<td><img width="60" height="50" src=${goodsPic}>
+							<td>${userName}</td>
+							<td>${suppliername}</td>
+							<td>${result[i].totalPrice}</td>
+							<td>${result[i].order_time}</td>
+							<td>${result[i].order_address}</td>
+							<td>${result[i].num}</td>
+							<td>${status}</td>
+							<td>
+							</td>
+						</tr>`;
+					}
+					$("#tableFirst").append(html);
+				}
+			}
+		});
+	}
+	
+	function getGoodsPic(id){
+		var pic_url="";
+		$.ajax({
+            type: "GET",
+            dataType: "json",
+            async:false,
+            url: '/goods/info/' + id,
+            success: function (data) {
+                if (data != null) {
+                	pic_url=data.data.pic_url;
+                }else {
+                    alert(" getGoodsPic data.data.pic_url 无数据!");
+                }
+            }
+        });
+		return pic_url;
+	 }
+	
+	function getGoodsName(id){
+		var name="";
+		$.ajax({
+            type: "GET",
+            dataType: "json",
+            async:false,
+            url: '/goods/info/' + id,
+            success: function (data) {
+                if (data != null) {
+                	name=data.data.goodsname;
+                }else {
+                    alert(" getGoodsName data.data.goodsname 无数据!");
+                }
+            }
+        });
+		return name;
+	 }
+
+	function getSupplierName(id){
+		var name="";
+		$.ajax({
+            type: "GET",
+            dataType: "json",
+            async:false,
+            url: '/supplier/info/' + id,
+            success: function (data) {
+                if (data != null) {
+                	name=data.data.username;
+                }else {
+                    alert(" getSupplierName data.data.username 无数据!");
+                }
+            }
+        });
+		return name;
+	 }
+	
+	function getUserName(id){
+		var name="";
+		$.ajax({
+            type: "GET",
+            dataType: "json",
+            async:false,
+            url: '/user/info/' + id,
+            success: function (data) {
+            	console.log(data);
+                if (data != null) {
+                	name=data.data.username;
+                }else {
+                    alert(" getUserName data.data.username 无数据!");
+                }
+            }
+        });
+		return name;
+	 	}
+	
+	/*删除*/
+    function deleteOrder(id) {
+		/* alert("deleteSupplier: id="+id); */
+		var r=confirm("请确认是否删除订单的信息？（前台商品将永久失效，请核实信息后再删除）");
+		if(r==true){
+			$.ajax({
+                   type: "GET",//方法类型
+                   dataType: "json",//预期服务器返回的数据类型
+                   url: "/order/delete/" + id,//url
+                   success: function (result) {
+                       console.log(result);//打印服务端返回的数据
+                       if (result.resultCode == 200) {
+                           alert("用户已成功删除");
+                       }else {
+                       	alert("删除失败");
+                       }
+                   },
+                   error: function () {
+                   	//alert("ERROR！");
+                   }
+               });
+			location.reload();
+		}
+	}
+	
+	/*发货*/
+    function send(id) {
+		$.ajax({
+		    type: "GET",//方法类型
+		    dataType: "json",//预期服务器返回的数据类型
+		    url: "/order/send/" + id,//url
+		    success: function (result) {
+		        console.log(result);//打印服务端返回的数据
+		        if (result.resultCode == 200) {
+		            alert("订单状态变更: 发货状态，已推送至前台");
+		        }else {
+		        	alert("删除失败");
+		        }
+		    },
+		    error: function () {
+		    	//alert("ERROR！");
+		    }
+		});
+		location.reload();
+	}
+	
+</script>
+</html>

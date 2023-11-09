@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>生鲜详情</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="keywords" content="" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- bootstrap-css -->
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<!--// bootstrap-css -->
+<!-- css -->
+<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+<!--// css -->
+<!-- font-awesome icons -->
+<link href="css/font-awesome.css" rel="stylesheet"> 
+<!-- //font-awesome icons -->
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/PCASClass.js"></script>
+<script src="js/laydate/laydate.js"></script>
+<script src="js/check.js"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$(".scroll").click(function(event){		
+			event.preventDefault();
+			$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+		});
+	});
+</script> 
+</head>
+<body>
+	<!-- banner -->
+	<div class="banner about-banner">
+		<div class="header">
+			<div class="container">
+				<div class="header-left">
+					<div class="w3layouts-logo">
+						<h1>
+							<a href="index.html">每日鲜 <span><sup>Life</sup></span></a>
+						</h1>
+					</div>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+		<div class="header-bottom">
+			<div class="container">
+				<div class="top-nav">
+						<nav class="navbar navbar-default">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+										<span class="sr-only">Toggle navigation</span>
+										<span class="icon-bar"></span>
+										<span class="icon-bar"></span>
+										<span class="icon-bar"></span>
+									</button>
+								</div>
+							<!-- Collect the nav links, forms, and other content for toggling -->
+							<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+								<ul class="nav navbar-nav">
+								<li><a class="active list-border" href="index.html">主页</a></li>
+								<li><a href="goodsList.html">生鲜列表</a></li>
+								<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">分类<span class="caret"></span></a>
+									<ul class="dropdown-menu">
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=1">水果</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=2">肉类</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=3">蔬菜</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=4">水产</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=5">乳品</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=6">酒饮</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=7">熟食</a></li>
+										<li><a class="hvr-bounce-to-bottom" href="goodsList.html?type=8">轻食</a></li>
+									</ul>
+								</li>								
+								<li><a href="cart.html">购物车</a></li>
+								<li><a class="list-border1" href="userInfo.html">个人中心</a></li>
+								<li><a class="list-border1" href="order.html">订单配送</a></li>
+							</ul>
+								<div class="clearfix"> </div>
+							</div>	
+						</nav>		
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- //banner -->
+	<div class="about-heading">	
+		<div class="container">
+			<h2>生鲜信息</h2>
+		</div>
+	</div>
+	<!-- blog -->
+	<div class="blog">
+		<div class="container">
+			<div class="agile-blog-grids">
+				<div class="col-md-8 agile-blog-grid-left" style="width: 40%;">
+					<div class="agile-blog-grid">
+						<div class="agile-blog-grid-left-img">
+							<a href="single.html"><img height="400px" width="200px" id="picInfo" src="" alt="" /></a>
+						</div>
+						<div class="blog-left-grids" >
+								<input type="text" id="id" hidden="" >
+								<input type="text" id="price" hidden="" >
+								<input type="text" id="goodsid" hidden="" >
+								<input type="text" id="supplierid" hidden="" >
+							<div class="clearfix"> </div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 agile-blog-grid-right" style="width:50%;margin-left: 5%;">
+					<!-- <h3 class="hdg wow fadeInUp animated" data-wow-delay=".5s">详细清单</h3> -->
+						<ul class="list-group wow fadeInUp animated" data-wow-delay=".5s">
+						   <li class="list-group-item" id="goodsname"></li>
+						   <li class="list-group-item" id="pricet"></li>
+						   <li class="list-group-item" id="inventoryt"></li>
+						   <li class="list-group-item" id="pub_timet"></li>
+						   <li class="list-group-item" id="sortid"></li>
+						   <li class="list-group-item" id="detailst"></li>
+						   <!-- <li class="list-group-item" id="pic_url"></li> -->
+						</ul>
+						<span style="float: left;text-align: center;line-height: 40px;">购买数量&nbsp;&nbsp;</span> 
+						<input type="text" onchange="calPrice()" id="nums" class="form-control" value="1" style="width: 25%;float: left;" onkeyup="value=value.replace(/[^\d]/g,'')" >
+						<span style="float: left;text-align: center;line-height: 40px;">&nbsp;&nbsp;份&nbsp;&nbsp;</span> 
+						<span style="float: left;text-align: center;line-height: 40px;float: left;">&nbsp;&nbsp;支付总额 ￥</span> 
+						<input type="text" id="priceSum" disabled="disabled" class="form-control" value="1" style="width: 25%;float: left;" onkeyup="value=value.replace(/[^\d]/g,'')"  > 
+						<span style="float: left;text-align: center;line-height: 40px;">&nbsp;&nbsp;元&nbsp;&nbsp;</span> 
+						<div style="float: left;margin-bottom: 20px;margin-top: 10px;">
+						<span style="float: left;text-align: center;line-height: 40px;">配送地址&nbsp;&nbsp;</span> 
+						 
+						 <select  style="float: left;width: 150px;margin-right: 10px;" class="form-control" id="P1" name="P1"></select> &nbsp;&nbsp; &nbsp;&nbsp;
+						 <select  style="float: left;width: 180px;"  class="form-control" id="C1" name="C1"></select><br>
+						</div>
+						
+						<textarea class="form-control" style="width: 100%;height: 80px;" id="address" name="address" placeholder="请填写具体的所在省/市/区/街道/门牌号" id="address" required=""></textarea>
+						<p class="clearfix"></p>
+						<h3>
+						<a style="text-decoration: none;margin-top: 0px;float: right;" href="#">
+							<span id="surePay" style="padding: 10px;margin: 0 0;" class="label label-danger">确认支付订单</span>
+						</a>
+						</h3>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>
+	<!-- //blog -->
+	<script src="js/SmoothScroll.min.js"></script>
+	<script type="text/javascript" src="js/move-top.js"></script>
+	<script type="text/javascript" src="js/easing.js"></script>
+	<!-- here stars scrolling icon -->
+	<script type="text/javascript">
+	new PCAS("P1","C1");
+	$("#P1,#C1").change(function() {
+		//alert($("#P1 option:selected").text() + $("#C1 option:selected").text() );
+		$("#address").val($("#P1 option:selected").text() +" "+ $("#C1 option:selected").text()+" ");
+	})
+
+	$("#surePay").click(function() {
+		var num=$("#nums").val()*1;
+		var goodsid=$("#goodsid").val();
+		var totalPrice=$("#priceSum").val();
+		var buyerid=getCookie("mrxuserId");
+		var supplierid=$("#supplierid").val();
+		var order_address=$("#address").val();
+		if(num<=0){
+			alert("数量不可以小于等于零");
+			return;
+		}
+		if(order_address==""){
+			alert("请填写配送地址");
+			return;
+		}
+		//alert("buyerid"+buyerid+" goodsid"+goodsid+" num"+num+" totalPrice"+totalPrice+" supplierid"+supplierid+" order_address"+order_address);
+		
+		var cartData={"num":num,"goodsid":goodsid,"buyerid":buyerid,"supplierid":supplierid,"order_address":order_address,"totalPrice":totalPrice};
+      	$.ajax({
+			type:"POST",
+			dataType: "json",
+			url:"/order/insert",
+			contentType: "application/json;charset=utf-8",
+			data:JSON.stringify(cartData),
+			success:function(result){
+				if(result.resultCode == 200) {
+					alert("创建订单成功！");
+					window.location.href="order.html";
+				}else{
+					alert(result.message);
+					return;
+				}
+			}
+		});
+	});
+	
+	$("#nums").change(function() {
+		calPrice();
+	});
+	
+	function calPrice(){
+		var num=$("#nums").val()*1;
+		var price=$("#price").val()*1;
+		var sum = num*price;
+		$("#priceSum").val(sum);
+		
+	}
+	
+	$(document).ready(function() {
+		$().UItoTop({ easingType: 'easeOutQuart' });
+		
+		if (getCookie("mrxuserId") == null) {
+	        alert("检测到账户未登录!");
+	        window.location.href = "login.html";
+	    }else{
+	    	var id=getCookie("mrxuserId");
+	    }
+		
+		var id = getQueryStringByName("id");
+        if (id == null) {
+            alert("无数据!");
+            return;
+        }
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async:false,
+            url: '/cart/info/' + id,
+            success: function (data) {
+                if (data != null) {
+            		$("#id").val(data.data.id);
+                	$('#goodsid').val(data.data.goodsid);
+                	$('#supplierid').val(data.data.supplierid);
+            		getGoodsInfo(data.data.goodsid);
+                }
+                else {
+                    alert("无数据!");
+                }
+            }
+        });
+	});
+		
+		function getGoodsInfo(id){
+			$.ajax({
+	            type: "GET",
+	            dataType: "json",
+	            async:false,
+	            url: '/goods/info/' + id,
+	            success: function (data) {
+	                if (data != null) {
+	            		$("#goodsid").val(data.data.id);
+	                	$('#price').val(data.data.price);
+	            		$("#priceSum").val(data.data.price);
+	            		$('#pic_url').text(data.data.pic_url);
+	            		$("#pub_time").text(data.data.pub_time);
+	            		$("#inventory").text(data.data.inventory);
+	            		$('#supplierid').val(data.data.supplierid);
+	            		$("#sortid").text("分类："+data.data.sortid);
+	            		$('#picInfo').attr('src', data.data.pic_url);
+	                	$('#pricet').text("价格：￥"+data.data.price);
+	            		$("#details").text("详细信息："+data.data.details);
+	            		$("#goodsname").text("名称："+data.data.goodsname);
+	            		$("#detailst").text("详细信息："+data.data.details);
+	            		$("#inventoryt").text("库存："+data.data.inventory);
+	            		$("#pub_timet").text("发布日期："+data.data.pub_time);
+	                }
+	                else {
+	                    alert("无数据!");
+	                }
+	            }
+	        });
+   	 	}
+		
+		function getQueryStringByName(name) {
+	        var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+	        if (result == null || result.length < 1) {
+	            return "";
+	        }
+	        return result[1];
+	    }
+	</script>
+	<!-- //here ends scrolling icon -->
+</body>	
+</html>
